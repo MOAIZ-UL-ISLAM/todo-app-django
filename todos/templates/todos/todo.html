@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% comment %} Bootstrap {% endcomment %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% comment %} Bootstrap {% endcomment %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Todo{% endblock %}</title>
+</head>
+<body>
+    {% block content %}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-dark  sticky-top">
+            <a class="navbar-brand text-secondary" href="/">Home</a>
+            <button class="navbar-toggler text-secondary" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary " href="{% url 'logout' %}">Logout</a>
+                    </li>
+
+                </ul>
+                </div>
+                </nav>
+                </header>
+    <div class="content container">
+        <h2>Add a new Todo</h2>
+        
+        <form action='{% url "add-todo" %}'  method='post'>
+        {% csrf_token %}
+        {{form.as_p}}
+        <br/>
+        <button type ='submit' class='btn btn-primary mt-8 '>Add Todo</button>
+        <br/>
+        <br/>
+        <br/>
+        </form>
+    </div>
+
+
+    <div class="container border">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Desc</th>
+                <th scope="col">Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for todo in todos %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{todo.title}}</td>
+                    <td>{{todo.description}}</td>
+                    <td>{{todo.status}}</td>
+                    <td>
+                        <form action="{% url 'edit-todo' todo.id %}" method="get" style="display: inline;">
+                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                        </form>
+                        <form action="{% url 'delete-todo' todo.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>s
+                  </tr>
+                {% endfor %}
+              
+            </tbody>
+          </table>
+    </div>
+
+        {% endblock %}
+   
+
+    {% include 'accounts/footer.html' %}
+</body>
+</html>
